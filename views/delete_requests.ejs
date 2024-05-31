@@ -1,0 +1,127 @@
+<!doctype html>
+    <html>
+    <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://cdn.bootcss.com/popper.js/1.11.0/umd/popper.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <% if(isAuthenticated) { %>
+          <title><%= user.given_name %>'s Profile</title>
+        <% } else { %>
+          <title>You are not logged in.</title>
+        <% } %>
+        <style>
+            .card {
+              width: 350px;
+              margin-bottom: 20px;
+              margin-left: 1rem;
+            }
+        
+            .card-title {
+              margin-bottom: 0;
+            }
+        
+            .card-text {
+              margin-bottom: 10px;
+            }
+        
+            .card-buttons {
+              display: flex;
+              justify-content: space-between;
+            }
+          </style>
+    </head>
+    <header>
+      <% if(isAuthenticated) { %>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" style="padding-left:1rem"><b>BCA Research</b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto" style="padding-left:1rem;">
+            <li class="nav-item">
+                <a class="nav-link" href="about">About</a>
+            </li>
+            <li class="nav-item">
+              <% if(isTeacher) { %>
+              <a class="nav-link" href="management_console">My Profile</a>
+              <% } else { %>
+              <a class="nav-link" href="landing">My Profile</a>
+              <% } %>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="data_display">Previous Projects</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="competitions">Competitions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="protocols">Protocols</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="project_upload">+ Create New Project</a>
+            </li>
+          </ul>
+          <span class="navbar-text" style="margin-left:auto; margin-right: 1.5rem;">
+            <a class="navbar-brand" href="landing" style="margin-left:auto;">
+                <img src="<%= user.picture %>" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="">
+                <%= user.given_name %> <%= user.family_name %>
+            </a>
+          </span>
+        </div>
+      </nav>
+      <h1 class="mt-4 mb-4" style="text-align:center; padding-top:5rem;">Delete Requests From Your Students</h1>
+      <% } %>
+    </header>
+    <body>
+        <% if (isTeacher) { %>
+            <% if (projects.length>0) { %>
+                <% projects.forEach(function(project) { %>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= project.title %></h5>
+                            <p class="card-text">by <%= project.first_name %> <%= project.last_name %></p>
+                            <div style="display: inline;">
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<%= project.project_id %>" data-project-id="<%= project.project_id %>">✓ Delete Project</button>
+                                <form method="POST" action="/send-to-dev">
+                                    <input type="hidden" name="project_id" value="<%= project.project_id %>">
+                                    <input type="hidden" name="user_id" value="<%= project.user_id %>">
+                                    <button class="btn btn-secondary" type="submit">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="deleteModal<%= project.project_id %>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel<%= project.project_id %>" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteModalLabel<%= project.project_id %>">Mentor Delete Confirmation</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            
+                              <form method="POST" action="/delete-project">
+                                <div class="modal-body">
+                                  <input type="hidden" name="project_id" value="<%= project.project_id %>">
+                                  <p>Are you sure you want to <strong>permanently</strong> delete the project "<%= project.title %>"?</p>
+                                  <br>Note: <strong>once a project is deleted, it cannot be recovered.</strong>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                  <button type="submit" class="btn btn-danger" id="deleteBtn<%= project.project_id %>">Delete</button>
+                                </div>
+                              </form>
+                          </div>
+                        </div>
+                      </div>
+            <% }); %>
+            <% } else { %>
+                <h4 style="text-align:center">No students of yours are currently attempting to delete a project. All clear!</h4>
+            <% } %>
+        <% } else { %>
+        <h5>As a student, you are unable to approve delete requests.</h5>
+        <% } %>
+    </body>
+</html>

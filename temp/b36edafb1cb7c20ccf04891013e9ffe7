@@ -1,0 +1,43 @@
+import java.util.Arrays;
+
+public class Day1_MergingLists {
+    public static int[] mergeLists (int[] listA, int[] listB) {
+        // create new array
+        int[] merged = new int[listA.length + listB.length];
+                
+        // create a, b, and i
+        int a = 0;
+        int b = 0;
+        int i = 0;
+        
+        // while loop to compare and move
+        while (a < listA.length && b < listB.length) {
+            if (listA[a] < listB[b]) {
+                merged[i++] = listA[a++];
+            }
+            else {
+                merged[i++] = listB[b++];
+            }
+        }
+
+        // move remain items
+        while (a < listA.length) {
+            merged[i++] = listA[a++];            
+        }
+
+        while (b < listB.length) {
+            merged[i++] = listB[b++];            
+        }
+
+        return merged;
+    }
+
+    public static void main(String[]args) {
+        int[] a = {5, 12, 13, 25, 27, 81}; 
+        int[] b = {1, 14, 14, 18, 19}; 
+
+        int[] merged = mergeLists(a, b);
+
+        System.out.println(Arrays.toString(merged));
+    }
+}

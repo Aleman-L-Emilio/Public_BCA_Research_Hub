@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Upload Your Research Project!</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script type="text/javascript" src="/app.js"></script>
+        <script src="https://apis.google.com/js/api.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://apis.google.com/js/api.js"></script>
+    </head>
+
+    <% if(isAuthenticated) { %>
+
+
+    <header>
+        <!-- <nav class="navbar navbar-light" style="background-color: #007bff;">
+            <a class="navbar-brand mt-5" href="landing" style="position:fixed; margin-left:auto;">
+                <img src="<%= user.picture %>" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="">
+                <%= user.given_name %> <%= user.family_name %>
+            </a>
+        </nav> -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" style="padding-left:1rem"><b>BCA Research</b></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+              <ul class="navbar-nav mr-auto" style="padding-left:1rem;">
+                <li class="nav-item">
+                  <a class="nav-link" href="about">About</a>
+                </li>
+                <li class="nav-item">
+                  <% if(isTeacher) { %>
+                  <a class="nav-link" href="management_console">My Profile</a>
+                  <% } else { %>
+                  <a class="nav-link" href="landing">My Profile</a>
+                  <% } %>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="data_display">Previous Projects</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="competitions"><b>Competitions</b></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="protocols">Protocols</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="project_upload">+ Create New Project</a>
+                </li>
+              </ul>
+              <span class="navbar-text" style="margin-left:auto; margin-right: 1.5rem;">
+                <a class="navbar-brand" href="landing" style="margin-left:auto;">
+                    <img src="<%= user.picture %>" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="">
+                    <%= user.given_name %> <%= user.family_name %>
+                </a>
+              </span>
+            </div>
+          </nav>
+        <h1 class="mb-3" style="text-align:center; margin-top: 5.25rem;">Create New Project</h1>
+    </header>
+    <body>
+        <div style="width:50%; margin: auto; text-align:center;">
+            <form id="projectUpload" class="needs-validation" action="/add_project" method="post" enctype="multipart/form-data" novalidate>
+                <div class="form-group">
+                    <label for="title">Project Title</label>
+                    <input type="text" name="projectTitle" class="form-control" id="projectTitle">
+                </div>
+                <div class="form-group">
+                    <label for="exampleDataList" class="form-label">Research Mentor</label>
+                    <!-- <input type="text" name="teacher" class="form-control" id="txtName"> -->
+                    <input class="form-control" list="datalistOptions" name="teacherSelection" id="teacherSelection">
+                    <datalist id="datalistOptions">
+                        <option>carnod@bergen.org</option>
+                        <option>erismi@bergen.org</option>
+                        <option>donleo@bergen.org</option>
+                        <option>alywal@bergen.org</option>
+                        <option>matwan@bergen.org</option>
+                        <option>deokim@bergen.org</option>
+                        <option>musmus23@bergen.org</option>
+                        <!-- THIS LIST SHOULD BE RESPOSNIVE TO WHOEVER IS INSIDE THE BCA RESEARCH TEACHER FAMILY -->
+                    </datalist>
+                <div class="form-group">
+                    <script type="module">
+                        import Tags from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-tags@master/tags.js";
+                        Tags.init("select");
+                    </script>
+                    <label for="validationTagsClear" class="form-label">Tags (allow clear)</label>
+                    <select class="form-select" id="validationTagsClear" name="tagOptions" multiple data-allow-clear="true">
+                      <option selected disabled hidden value="">Choose a tag...</option>
+                      <option value="Cell Biology Research">Cell Biology Research</option>
+                      <option value="Chemistry Research">Chemistry Research</option>
+                      <option value="Physics Research">Physics Research</option>
+                      <option value="Engineering Research">Engineering Research</option>
+                      <option value="Math Research">Math Research</option>
+                      <option value="Computational Research">Computational Research</option>
+                      <option value="Behavior/Social Sciences Research">Behavior/Social Sciences Research</option>
+                      <option value="Biomedical Research">Biomedical Research</option>
+                      <option value="Microbiology Research">Microbiology Research</option>
+                      <option value="Biochemistry Research">Biochemistry Research</option>
+                      <option value="Cancer Research">Cancer Research</option>
+                      <option value="MTS Assay"></option>
+                      <option value="ROS (Reactive Oxygen Species) Assay"></option>
+                      <option value=""></option>
+                      <option value=""></option>
+                      <option value=""></option>
+                      <option value="ELISA"></option>
+                      <option value="Fluorescence Microscopy"></option>
+                      <option value="Thioflavin T Assay"></option>
+                      <option value=""></option>
+                      <option value=""></option>
+                      <option value=""></option>
+                    </select>
+                    <div class="invalid-feedback">Please select a valid tag.</div>
+                </div>
+                <div class="form-group">
+                    <label for="abstract">Abstract</label>
+                    <textarea class="form-control" name="Abstract" id="Abstract"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="paperupload">Research Paper Upload</label>
+                    <br>
+                    <input type="file" class="form-control-file" name="researchPaper" id="researchPaper" id="exampleFormControlFile1">
+                </div>
+                <p>&nbsp;</p>
+                <div class="form-group">
+                    <input type="submit" name="Submit" class="btn btn-primary" id="uploadSubmit" value="Submit">
+                </div>
+            </form>
+
+            <script>
+                $.ajax({
+                type: "POST",
+                url: "./insert.php",
+                data: { project_id: 2, student_id: 1, title: 'SAMPLE_TITLE1', abstract: 'SAMPLE_ABSTRACT', tags: 'SAMPLE_TAGS', research_paper: 'SAMPLE_PAPER', teacher_id: 1, teacher_email: 'matwan23@bergen.org'},
+                success: function(data) {
+                    console.log("Row inserted successfully");
+                }
+            });
+            </script>
+
+        </div>
+    </body>
+
+    <% } else { %>
+        <div class="auth-login-container">
+            <p>Please log in to access this page.</p>
+            <button onclick="location.href='/login'" class="btn btn-primary">Login</button>
+        </div>
+    <% } %>
+
+    <style>
+        p {
+          font-size: 20px;
+        }
+        button {
+          font-size: 20px;
+          size: 2cap;
+        }
+        .auth-login-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: center;
+          align-items: center;
+          height: 100vh;
+        }
+    </style>
+
+</html>

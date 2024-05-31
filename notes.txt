@@ -1,0 +1,3 @@
+Installs used:
+(npm init -y)
+npm install auth0 express path mysql
